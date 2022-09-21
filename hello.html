@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+ </head>
+   <body>
+   
+    <ul class="message">
+        
+    </ul>
+    <button onclick="fetch()"> click me</button>
+    <h1>Create Article</h1>
+    <form>  
+        Title:  
+        <input type="text" id="titletext" size="20">  
+        <br> <br>  
+        Text:  
+        <input type="text" id="bodytext" size="20"> 
+        <br> <br> 
+        <input type="submit"> 
+        </form> 
+   
+    <script>
+        function fetch(){
+            $.ajax({
+              url: "http://localhost:3000/articles",
+              type:"GET",
+              dataType:"JSON",
+              data:JSON.stringify({}),
+              success:function(data){
+                $('.message').append("<li>"+JSON.stringify(data)+"</li>")
+              }
+            });
+        }
+
+
+
+
+
+
+        
+    </script>
+
+
+   </body>
+</html>

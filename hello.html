@@ -1,50 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
  <head>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
  </head>
+     <style>
+
+         input[type=submit] {
+          background-color: rgb(236, 80, 74);
+         }
+         input[type=submit]:hover {
+  background-color: rgb(106, 214, 233);
+
+       
+}
+
+
+     </style>
    <body>
+  
+     
+
+    
+     <h1 style="background-color:DodgerBlue;">Create Post</h1>
+     <form id="myform" class="formfirst">
+     Title<input type="text" 
+     id="titletext"
+      maxlength="32"
+      pattern="[a-zA-Z]" required> <br /><br />
+
+
+      Text<input type="text" 
+      id="bodytext"  
+      maxlength="32" 
+      pattern="[a-zA-Z]" required> <br /><br />
+      
+      <input type="submit"
+      id="saveform" />
+    
+      
+     </form>
+
+
+     <hr>
+     
+
+     <h1 style="background-color:DodgerBlue;">Edit Post</h1>
+     <form id="formsecond" class="formsecond">
+     
+      ID:<input type="number" id="postid"  ><br/><br>
+      Title:<input 
+      type="text"
+       id="posttitle"
+        maxlength="32" required /><br /><br />
+      Text:<input type="text" id="posttext" maxlength="32" required/><br /><br />
+      <input type="submit" id="secondform"/>
+     </form>
+     <hr>
+            
+
+
+
+     <h1 style="background-color:DodgerBlue;">Delete Post</h1>
+     <form id="formsecond" class="formsecond">
+     
+      ID:<input type="number" id="postid"  ><br/><br>
+      
+      <input type="submit" id="secondform"/>
+     </form>
+     <hr>
+
+
+
+    
+
+
+  
+
+  <h1 style="background-color:DodgerBlue;">Create Comment</h1>
+  <form id="myform" class="formcomment">
+    Comment:<input type="text" id="commentdata" maxlength="32" required /><br /><br />
+  <input type="submit" id="savecomment" />
+  </form>
+  <hr>
+  
    
-    <ul class="message">
+
+  <h1 style="background-color:DodgerBlue;">Edit Comments</h1>
+   <form id="formsecond" class="editcomment">
+     ID:<input type="number   " id="commentid"  ><br/><br>
+     Comments:<input type="text" id="commenttext" maxlength="32" required/><br /><br />
+     
+   <input type="submit" id="commenteditdata"/>
+   
+  
+   </form>
+   <hr>
+   
+
+   
+   <ul class="message"></ul>
+   
+   
+   <button style="background:#3630a3;color:white;" onclick="myfun()">Show</button></a>
+   <div class="container">
+    <table class="table">
+      <thead>
         
-    </ul>
-    <button onclick="fetch()"> click me</button>
-    <h1>Create Article</h1>
-    <form>  
-        Title:  
-        <input type="text" id="titletext" size="20">  
-        <br> <br>  
-        Text:  
-        <input type="text" id="bodytext" size="20"> 
-        <br> <br> 
-        <input type="submit"> 
-        </form> 
-   
-    <script>
-        function fetch(){
-            $.ajax({
-              url: "http://localhost:3000/articles",
-              type:"GET",
-              dataType:"JSON",
-              data:JSON.stringify({}),
-              success:function(data){
-                $('.message').append("<li>"+JSON.stringify(data)+"</li>")
-              }
-            });
+      </thead>
+      <tbody id="data">
+      </td>
+      </tbody>
+    </table>
+</div>
+
+
+
+
+<ul class="mymessage"></ul>
+
+   <button style="background:#3630a3;color:white;" onclick="commentfun()">Comment Show</button></a>
+   <div class="container">
+    <table class="table">
+      <thead>
+        
+      </thead>
+      <tbody id="mydata">
+      </td>
+      </tbody>
+    </table>
+</div>
+</form>
+
+
+
+<script>    
+     
+      function myfun(){
+        $.ajax({
+          url: 'http://localhost:3000/articles',
+          type:"GET",
+          dataType:"JSON",
+          data:JSON.stringify({}),
+          success:function(data){
+          var temp = "";
+          data.forEach((itemData) => {
+            temp += "<tr>";
+            temp += "<td>" + itemData.id + "</td>";
+            temp += "<td>" + itemData.title + "</td>";
+            temp += "<td>" + itemData.text + "</td>";
+            temp += "<td><a href='#' onclick={deletePost("+ itemData.id +")}>Delete</a></td>";
+            temp += "<td><a href='#' onclick={editPost()}>Edit</a></td></tr>";
+          });
+          document.getElementById('data').innerHTML = temp;
         }
+      }
+    )
+  }
+  function deletePost(id){
+    $.ajax({
+      url: `http://localhost:3000/articles/${id}`,
+      type:"DELETE",
+      dataType:"JSON",
+      data:JSON.stringify({}),
+      success:function(mydata){
+        alert ("you are successfully destroyed")
+        debugger
+      }
+    })
+  }
+
+  
+  function commentfun(){
+        $.ajax({
+          url: 'http://localhost:3000/articles/2/comments',
+          type:"GET",
+          dataType:"JSON",
+          data:JSON.stringify({}),
+          success:function(mydata){
+          var temps = "";
+          mydata.forEach((itemDatas) => {
+            temps += "<tr>";
+            temps += "<td>" + itemDatas.id + "</td>";
+            temps += "<td>" + itemDatas.commenter + "</td>";
+          });
+          document.getElementById('mydata').innerHTML = temps;
+        }
+      }
+    )
+  }
 
 
 
+  function alldatafun(){
+        $.ajax({
+          url: "http://localhost:3000/articles",
+          type:"GET",
+          dataType:"JSON",
+          data:JSON.stringify({}),
+          success:function(data){
+            $('.message').append("<li>"+JSON.stringify(data)+"</li>")
+          }
+        });
+    }
 
 
 
-        
-    </script>
+    function fetchcommentsdata(){
+        $.ajax({
+          url: "http://localhost:3000/articles/1/comments",
+          type:"GET",
+          dataType:"JSON",
+          data:JSON.stringify({}),
+          success:function(data){
+            $('.commentmessage').append("<li>"+JSON.stringify(data)+"</li>")
+          }
+        });
+    }
+ </script>
+ </body>
 
 
-   </body>
+   
 </html>
